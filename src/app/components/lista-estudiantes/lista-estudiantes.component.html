@@ -1,11 +1,26 @@
+<h2>Crear / Editar Estudiante</h2>
+
+<form (ngSubmit)="nuevo.id ? actualizarEstudiante() : crearEstudiante()" #form="ngForm">
+  <input name="nombre" [(ngModel)]="nuevo.nombre" placeholder="Nombre" required />
+  <input name="email" [(ngModel)]="nuevo.email" placeholder="Email" required />
+  <input name="edad" type="number" [(ngModel)]="nuevo.edad" placeholder="Edad" required min="18" />
+
+  <button type="submit" [disabled]="form.invalid">{{ nuevo.id ? 'Actualizar' : 'Crear' }}</button>
+  <button type="button" (click)="nuevo = { nombre: '', email: '', edad: 18 }">Limpiar</button>
+</form>
+
+<p *ngIf="loading">Cargando...</p>
+<p *ngIf="errorMensaje" style="color:red">{{ errorMensaje }}</p>
+
+<hr>
+
 <h2>Lista de Estudiantes</h2>
+<button (click)="cargarEstudiantes()">Refrescar</button>
 
-<div *ngIf="errorMensaje" style="color:red;">
-  {{ errorMensaje }}
-</div>
-
-<ul *ngIf="!errorMensaje">
+<ul>
   <li *ngFor="let e of estudiantes">
-    {{ e.nombre }} - {{ e.email }} - {{ e.edad }} años
+    {{ e.nombre }} ({{ e.edad }}) — {{ e.email }}
+    <button (click)="editar(e)">Editar</button>
+    <button (click)="eliminar(e.id)">Eliminar</button>
   </li>
 </ul>

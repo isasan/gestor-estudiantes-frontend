@@ -13,7 +13,6 @@ export interface Estudiante {
   providedIn: 'root'
 })
 export class EstudianteService {
-
   private baseUrl = 'http://localhost:8080/estudiantes';
 
   constructor(private http: HttpClient) {}
@@ -22,7 +21,23 @@ export class EstudianteService {
     return this.http.get<Estudiante[]>(this.baseUrl);
   }
 
-  crear(estudiante: Estudiante): Observable<Estudiante> {
-    return this.http.post<Estudiante>(this.baseUrl, estudiante);
+  crear(est: Estudiante) {
+    return this.http.post<Estudiante>(this.baseUrl, est);
+  }
+
+  actualizar(id: number, est: Estudiante) {
+    return this.http.put<Estudiante>(`${this.baseUrl}/${id}`, est);
+  }
+
+  eliminar(id: number) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
+  obtener(id: number) {
+    return this.http.get<Estudiante>(`${this.baseUrl}/${id}`);
+  }
+
+  buscarPorNombre(nombre: string) {
+    return this.http.get<Estudiante[]>(`${this.baseUrl}/buscar/${nombre}`);
   }
 }
