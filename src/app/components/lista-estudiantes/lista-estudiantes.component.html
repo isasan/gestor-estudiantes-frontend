@@ -1,0 +1,11 @@
+<h2>Lista de Estudiantes</h2>
+
+<div *ngIf="errorMensaje" style="color:red;">
+  {{ errorMensaje }}
+</div>
+
+<ul *ngIf="!errorMensaje">
+  <li *ngFor="let e of estudiantes">
+    {{ e.nombre }} - {{ e.email }} - {{ e.edad }} años
+  </li>
+</ul>

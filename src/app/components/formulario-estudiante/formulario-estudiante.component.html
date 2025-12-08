@@ -1,0 +1,16 @@
+<h2>Crear Estudiante</h2>
+
+<form (ngSubmit)="crear()">
+
+  <label>Nombre</label>
+  <input [(ngModel)]="estudiante.nombre" name="nombre" required>
+
+  <label>Email</label>
+  <input [(ngModel)]="estudiante.email" name="email" required>
+
+  <label>Edad</label>
+  <input type="number" [(ngModel)]="estudiante.edad" name="edad" min="1" required>
+
+  <button type="submit">Crear</button>
+
+</form>
