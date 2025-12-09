@@ -13,31 +13,33 @@ export interface Estudiante {
   providedIn: 'root'
 })
 export class EstudianteService {
-  private baseUrl = 'http://localhost:8080/estudiantes';
+
+  private apiUrl = 'http://localhost:8080/estudiantes';
 
   constructor(private http: HttpClient) {}
 
+  // GET all
   listar(): Observable<Estudiante[]> {
-    return this.http.get<Estudiante[]>(this.baseUrl);
+    return this.http.get<Estudiante[]>(this.apiUrl);
   }
 
-  crear(est: Estudiante) {
-    return this.http.post<Estudiante>(this.baseUrl, est);
+  // GET by id
+  obtener(id: number): Observable<Estudiante> {
+    return this.http.get<Estudiante>(`${this.apiUrl}/${id}`);
   }
 
-  actualizar(id: number, est: Estudiante) {
-    return this.http.put<Estudiante>(`${this.baseUrl}/${id}`, est);
+  // POST create
+  crear(est: Estudiante): Observable<Estudiante> {
+    return this.http.post<Estudiante>(this.apiUrl, est);
   }
 
-  eliminar(id: number) {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+  // DELETE
+  eliminar(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  obtener(id: number) {
-    return this.http.get<Estudiante>(`${this.baseUrl}/${id}`);
-  }
-
-  buscarPorNombre(nombre: string) {
-    return this.http.get<Estudiante[]>(`${this.baseUrl}/buscar/${nombre}`);
+  // PUT update
+  actualizar(id: number, est: Estudiante): Observable<Estudiante> {
+    return this.http.put<Estudiante>(`${this.apiUrl}/${id}`, est);
   }
 }
