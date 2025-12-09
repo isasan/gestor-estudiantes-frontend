@@ -36,4 +36,15 @@ export class ListaEstudiantesComponent implements OnInit {
     this.auth.borrarToken(); // Borra token del almacenamiento
     this.router.navigate(['/login']); // Redirige a login
   }
+
+eliminarEstudiante(id?: number) {
+  if (!id) return; // no existe id
+  if (!confirm('¿Seguro que quieres eliminar este estudiante?')) return;
+
+  this.estudianteService.eliminar(id).subscribe({
+    next: () => this.cargarEstudiantes(),
+    error: () => this.errorMensaje = 'Error al eliminar estudiante'
+  });
+}
+
 }
