@@ -14,6 +14,7 @@ import { Estudiante, EstudianteService } from '../../services/estudiante.service
       <p><b>Nombre:</b> {{ estudiante.nombre }}</p>
       <p><b>Edad:</b> {{ estudiante.edad }}</p>
       <p><b>Email:</b> {{ estudiante.email }}</p>
+      <p><b>Teléfono:</b> {{ estudiante.telefono }}</p>
     </div>
 
     <p *ngIf="errorMensaje">{{ errorMensaje }}</p>

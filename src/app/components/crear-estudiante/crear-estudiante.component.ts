@@ -13,24 +13,44 @@ import { AuthService } from '../../services/auth.service';
 })
 export class CrearEstudianteComponent {
 
-  nuevo: Estudiante = { id: 0, nombre: '', email: '', edad: 18 };
-  errorMensaje: string = '';
+  estudiante: Estudiante = {
+    nombre: '',
+    email: '',
+    edad: 0,
+    telefono: '' // ← NUEVO CAMPO
+  };
+
+  mensajeError = '';
+  mensajeOk = '';
 
   constructor(
     private estudianteService: EstudianteService,
-    private router: Router,
-    public auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) {}
 
-  crearEstudiante() {
+  ngOnInit() {
+    // Solo ADMIN puede crear
     if (!this.auth.tieneRol('ADMIN')) {
-      this.errorMensaje = 'No tienes permisos para crear estudiantes';
+      this.router.navigate(['/']);
+    }
+  }
+
+  crear() {
+    if (!this.estudiante.nombre || !this.estudiante.email || !this.estudiante.telefono) {
+      this.mensajeError = 'Todos los campos son obligatorios';
       return;
     }
 
-    this.estudianteService.crear(this.nuevo).subscribe({
-      next: () => this.router.navigate(['/']),
-      error: (err) => this.errorMensaje = err?.error || 'Error al crear estudiante'
+    this.estudianteService.crear(this.estudiante).subscribe({
+      next: () => {
+        this.mensajeOk = 'Estudiante creado correctamente';
+        setTimeout(() => this.router.navigate(['/']), 1500);
+      },
+      error: (err) => {
+        console.error(err);
+        this.mensajeError = 'Error creando estudiante';
+      }
     });
   }
 }
