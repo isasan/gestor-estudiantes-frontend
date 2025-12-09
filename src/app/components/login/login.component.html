@@ -1,5 +1,30 @@
-<h2>Login Simulado</h2>
+<div class="login-container">
 
-<form (submit)="login(); $event.preventDefault()">
-  <button type="submit">Iniciar sesión</button>
-</form>
+  <h2>Iniciar sesión</h2>
+
+  <form (ngSubmit)="login()">
+
+    <div class="form-group">
+      <label for="username">Usuario</label>
+      <input type="text"
+             id="username"
+             [(ngModel)]="username"
+             name="username"
+             required>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <input type="password"
+             id="password"
+             [(ngModel)]="password"
+             name="password"
+             required>
+    </div>
+
+    <button type="submit">Login</button>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+
+  </form>
+</div>
