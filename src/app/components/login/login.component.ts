@@ -1,41 +1,20 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule],
-  template: `
-    <h2>Login</h2>
-
-    <form (ngSubmit)="login()">
-      <label>Usuario</label>
-      <input [(ngModel)]="usuario" name="usuario">
-
-      <label>Contraseña</label>
-      <input type="password" [(ngModel)]="password" name="password">
-
-      <button type="submit">Entrar</button>
-    </form>
-
-    <p *ngIf="error">{{ error }}</p>
-  `
+  imports: [CommonModule, FormsModule],
+  templateUrl: './login.component.html',
 })
 export class LoginComponent {
-
-  usuario = '';
-  password = '';
-  error = '';
-
-  constructor(private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
   login() {
-    if (this.usuario === 'admin' && this.password === '1234') {
-      this.router.navigate(['/']);
-    } else {
-      this.error = 'Credenciales incorrectas.';
-    }
+    this.auth.loginSimulado(); // simulamos login
+    this.router.navigate(['/estudiantes']); // redirige al listado
   }
 }
