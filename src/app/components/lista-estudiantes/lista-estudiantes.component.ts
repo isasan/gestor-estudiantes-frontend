@@ -1,77 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { EstudianteService, Estudiante } from '../../services/estudiante.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-lista-estudiantes',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, RouterModule], // Importante: permite *ngIf, *ngFor y [routerLink]
   templateUrl: './lista-estudiantes.component.html',
-  styleUrls: ['./lista-estudiantes.component.css']
 })
 export class ListaEstudiantesComponent implements OnInit {
 
   estudiantes: Estudiante[] = [];
-  nuevo: Estudiante = { nombre: '', email: '', edad: 18 };
-  errorMensaje: string | null = null;
-  loading: boolean = false;
+  errorMensaje: string = '';
 
-  constructor(private estudianteService: EstudianteService) {}
+  constructor(
+    private estudianteService: EstudianteService,
+    public auth: AuthService, // Public para poder usarlo en el template
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.cargarEstudiantes();
   }
 
-  cargarEstudiantes(): void {
-    this.loading = true;
-    this.errorMensaje = null;
+  cargarEstudiantes() {
     this.estudianteService.listar().subscribe({
-      next: (data) => { this.estudiantes = data; this.loading = false; },
-      error: (err) => {
-        console.error('Error al listar:', err);
-        this.errorMensaje = 'Error cargando estudiantes. Comprueba backend y CORS.';
-        this.loading = false;
-      }
+      next: (data) => this.estudiantes = data,
+      error: () => this.errorMensaje = 'No se puede obtener la lista. ¿Backend encendido?'
     });
   }
 
-  crearEstudiante(): void {
-    this.errorMensaje = null;
-    this.estudianteService.crear(this.nuevo).subscribe({
-      next: () => {
-        this.nuevo = { nombre: '', email: '', edad: 18 };
-        this.cargarEstudiantes();
-      },
-      error: (err) => {
-        console.error('Error crear:', err);
-        this.errorMensaje = err?.error || 'Error al crear estudiante';
-      }
-    });
-  }
-
-  eliminar(id?: number): void {
-    if (!id) return;
-    this.estudianteService.eliminar(id).subscribe({
-      next: () => this.cargarEstudiantes(),
-      error: (err) => {
-        console.error('Error eliminar:', err);
-        this.errorMensaje = 'Error al eliminar estudiante';
-      }
-    });
-  }
-
-  editar(est: Estudiante): void {
-    // abrir formulario de edición simple (puede ser modal o reutilizar el formulario)
-    // implementación sencilla: cargar datos en "nuevo" y luego llamar a actualizar cuando se envíe
-    this.nuevo = { ...est };
-  }
-
-  actualizarEstudiante(): void {
-    if (!this.nuevo.id) { this.errorMensaje = 'ID no definido para actualizar'; return; }
-    this.estudianteService.actualizar(this.nuevo.id, this.nuevo).subscribe({
-      next: () => { this.cargarEstudiantes(); this.nuevo = { nombre: '', email: '', edad: 18 }; },
-      error: (err) => { this.errorMensaje = err?.error || 'Error al actualizar' }
-    });
+  logout() {
+    this.auth.borrarToken(); // Borra token del almacenamiento
+    this.router.navigate(['/login']); // Redirige a login
   }
 }

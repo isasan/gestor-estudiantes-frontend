@@ -1,0 +1,20 @@
+<h2>Crear Estudiante</h2>
+
+<form (ngSubmit)="crearEstudiante()">
+  <div>
+    <label>Nombre:</label>
+    <input type="text" [(ngModel)]="nuevo.nombre" name="nombre" required>
+  </div>
+  <div>
+    <label>Email:</label>
+    <input type="email" [(ngModel)]="nuevo.email" name="email" required>
+  </div>
+  <div>
+    <label>Edad:</label>
+    <input type="number" [(ngModel)]="nuevo.edad" name="edad" min="1" required>
+  </div>
+
+  <button type="submit" [disabled]="!auth.tieneRol('ADMIN')">Crear</button>
+</form>
+
+<p *ngIf="errorMensaje">{{ errorMensaje }}</p>
