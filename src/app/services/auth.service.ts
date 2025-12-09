@@ -1,34 +1,34 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private estaLogueado = false; // inicialmente el usuario no está logueado
-  private token: string | null = null; // aquí guardaremos un JWT ficticio
+  private apiUrl = 'http://localhost:8080/api/auth';
+  private tokenKey = 'token';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  // Simular login: genera un "token" y marca como logueado
-  loginSimulado() {
-    this.token = 'jwt-simulado'; // más adelante será un JWT real
-    this.estaLogueado = true;
+  login(username: string, password: string) {
+    return this.http.post(this.apiUrl + '/login', {
+      username,
+      password
+    }, { responseType: 'text' }); // token como texto
   }
 
-  // Cerrar sesión
+  guardarToken(token: string) {
+    localStorage.setItem(this.tokenKey, token);
+  }
+
+  obtenerToken() {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  estaAutenticado() {
+    return this.obtenerToken() != null;
+  }
+
   logout() {
-    this.token = null;
-    this.estaLogueado = false;
-  }
-
-  // Comprobar si el usuario está autenticado
-  estaAutenticado(): boolean {
-    return this.estaLogueado;
-  }
-
-  // Obtener token (simulado)
-  obtenerToken(): string | null {
-    return this.token;
+    localStorage.removeItem(this.tokenKey);
   }
 }
