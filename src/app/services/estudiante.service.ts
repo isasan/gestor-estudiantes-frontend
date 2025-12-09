@@ -43,4 +43,6 @@ export class EstudianteService {
   actualizar(id: number, est: Estudiante): Observable<Estudiante> {
     return this.http.put<Estudiante>(`${this.apiUrl}/${id}`, est);
   }
+
+
 }

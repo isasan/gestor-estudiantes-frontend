@@ -21,7 +21,10 @@
     {{ e.nombre }} - {{ e.email }} - {{ e.edad }} - {{ e.telefono}}
 
     <!-- Solo usuarios ADMIN ven estos botones -->
-    <button *ngIf="auth.tieneRol('ADMIN')">Editar</button>
+    <button *ngIf="auth.tieneRol('ADMIN')" [routerLink]="['/editar', e.id]">
+      Editar
+    </button>
+
     <button *ngIf="auth.tieneRol('ADMIN')">Eliminar</button>
 
     <!-- Detalle del estudiante -->
