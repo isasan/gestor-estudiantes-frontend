@@ -1,10 +1,9 @@
-<h2>Crear Estudiante</h2>
+<h2>Editar Estudiante</h2>
 
-<!-- Mensajes -->
-<p style="color: red;" *ngIf="mensajeError">{{ mensajeError }}</p>
-<p style="color: green;" *ngIf="mensajeOk">{{ mensajeOk }}</p>
+<p style="color:red;" *ngIf="mensajeError">{{ mensajeError }}</p>
+<p style="color:green;" *ngIf="mensajeOk">{{ mensajeOk }}</p>
 
-<form (ngSubmit)="crear()">
+<form (ngSubmit)="guardarCambios()">
 
   <label>Nombre:</label>
   <input type="text" [(ngModel)]="estudiante.nombre" name="nombre" required>
@@ -22,14 +21,14 @@
   <br><br>
 
   <label>Teléfono:</label>
-  <input type="text" [(ngModel)]="estudiante.telefono" name="telefono" required> <!-- NUEVO CAMPO -->
+  <input type="text" [(ngModel)]="estudiante.telefono" name="telefono" required>
 
   <br><br>
 
-  <button type="submit">Crear</button>
+  <button type="submit">Guardar cambios</button>
 </form>
 
 <br>
+
 <!-- BOTÓN VOLVER -->
 <button (click)="volver()">Volver</button>
-

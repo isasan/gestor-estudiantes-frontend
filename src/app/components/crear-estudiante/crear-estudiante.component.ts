@@ -53,4 +53,7 @@ export class CrearEstudianteComponent {
       }
     });
   }
+  volver() {
+    this.router.navigate(['/']);
+  }
 }
