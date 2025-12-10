@@ -40,9 +40,11 @@ eliminar(id: number): Observable<string> {
 }
 
   // PUT update
-  actualizar(id: number, est: Estudiante): Observable<Estudiante> {
-    return this.http.put<Estudiante>(`${this.apiUrl}/${id}`, est);
-  }
+actualizar(id: number, estudiante: Estudiante) {
+
+return this.http.put<Estudiante>(`${this.apiUrl}/${id}`, estudiante);
+}
+
 
 
 }
