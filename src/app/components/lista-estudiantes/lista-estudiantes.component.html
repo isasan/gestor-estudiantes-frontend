@@ -1,41 +1,40 @@
-<h2>Lista de Estudiantes</h2>
+<!-- lista-estudiantes.component.html -->
+<div class="container mt-4">
+  <h2 class="mb-3">Lista de Estudiantes</h2>
 
-<!-- Información de depuración -->
-<p>Token: {{ auth.obtenerToken() }}</p>
-<p>Roles: {{ auth.obtenerRoles() | json }}</p>
-<p>Rol del usuario: {{ auth.obtenerRolUsuario() }}</p>
+  <!-- Información del usuario -->
+  <p><strong>Usuario:</strong> {{ auth.obtenerRolUsuario() }}</p>
 
-<!-- Crear (solo ADMIN) -->
-<button *ngIf="auth.tieneRol('ADMIN')" [routerLink]="['/crear']">
-  Crear Estudiante
-</button>
+  <!-- Botón crear estudiante visible solo para ADMIN -->
+  <button *ngIf="auth.tieneRol('ADMIN')" routerLink="/crear" class="btn btn-success mb-3">
+    <i class="fa fa-plus"></i> Crear Estudiante
+  </button>
 
-<!-- Logout -->
-<button (click)="logout()">Cerrar sesión</button>
+  <!-- Botón logout -->
+  <button (click)="logout()" class="btn btn-danger mb-3 float-end">
+    <i class="fa fa-sign-out-alt"></i> Cerrar sesión
+  </button>
 
-<ul>
-  <li *ngFor="let e of estudiantes">
-    {{ e.nombre }} - {{ e.email }} - {{ e.edad }} - {{ e.telefono }}
+  <ul class="list-group">
+    <li *ngFor="let e of estudiantes" class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        {{ e.nombre }} - {{ e.email }} - {{ e.edad }} - {{ e.telefono }}
+      </div>
+      <div>
+        <!-- Botones ADMIN -->
+        <button *ngIf="auth.tieneRol('ADMIN')" class="btn btn-sm btn-primary me-1" [routerLink]="['/editar', e.id]">
+          <i class="fa fa-edit"></i> Editar
+        </button>
+        <button *ngIf="auth.tieneRol('ADMIN')" class="btn btn-sm btn-danger me-1" (click)="eliminarEstudiante(e.id)">
+          <i class="fa fa-trash"></i> Eliminar
+        </button>
+        <!-- Detalle -->
+        <button class="btn btn-sm btn-info" [routerLink]="['/detalle', e.id]">
+          <i class="fa fa-eye"></i> Ver detalle
+        </button>
+      </div>
+    </li>
+  </ul>
 
-    <!-- Editar (solo ADMIN) -->
-    <button *ngIf="auth.tieneRol('ADMIN')" [routerLink]="['/editar', e.id]">
-      Editar
-    </button>
-
-    <!-- Eliminar (solo ADMIN) -->
-    <button
-      *ngIf="auth.tieneRol('ADMIN')"
-      (click)="eliminarEstudiante(e.id)"
-      [disabled]="isDeletingId === e.id">
-
-      <span *ngIf="isDeletingId === e.id">Eliminando...</span>
-      <span *ngIf="isDeletingId !== e.id">Eliminar</span>
-    </button>
-
-    <!-- Ver detalle -->
-    <button [routerLink]="['/detalle', e.id]">Ver detalle</button>
-  </li>
-</ul>
-
-<!-- Error -->
-<p *ngIf="errorMensaje" style="color:red">{{ errorMensaje }}</p>
+  <p *ngIf="errorMensaje" class="text-danger mt-2">{{ errorMensaje }}</p>
+</div>
