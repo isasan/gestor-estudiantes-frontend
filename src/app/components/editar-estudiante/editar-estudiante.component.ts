@@ -32,26 +32,30 @@ export class EditarEstudianteComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Solo ADMIN puede editar
     if (!this.auth.tieneRol('ADMIN')) {
       this.router.navigate(['/']);
       return;
     }
 
-    // Obtener el ID de la URL
     this.id = Number(this.route.snapshot.paramMap.get('id'));
     this.cargarEstudiante();
   }
 
   cargarEstudiante() {
     this.estudianteService.obtener(this.id).subscribe({
-      next: (data) => this.estudiante = data,
+      next: (data) => {
+        // Spread operator para mantener binding
+        this.estudiante = { ...data };
+      },
       error: () => this.mensajeError = 'Error cargando los datos del estudiante'
     });
   }
 
-  guardarCambios() {
-    if (!this.estudiante.nombre || !this.estudiante.email || !this.estudiante.telefono) {
+  guardarCambios(): void {
+    this.mensajeError = '';
+    this.mensajeOk = '';
+
+    if (!this.estudiante.nombre || !this.estudiante.email || !this.estudiante.telefono || !this.estudiante.edad) {
       this.mensajeError = 'Todos los campos son obligatorios';
       return;
     }
