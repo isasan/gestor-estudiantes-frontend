@@ -35,9 +35,9 @@ export class EstudianteService {
   }
 
   // DELETE
-  eliminar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
+eliminar(id: number): Observable<string> {
+  return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
+}
 
   // PUT update
   actualizar(id: number, est: Estudiante): Observable<Estudiante> {

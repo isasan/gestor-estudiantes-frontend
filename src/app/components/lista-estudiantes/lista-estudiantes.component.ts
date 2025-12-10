@@ -3,21 +3,24 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { EstudianteService, Estudiante } from '../../services/estudiante.service';
 import { AuthService } from '../../services/auth.service';
+import { EMPTY } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-lista-estudiantes',
   standalone: true,
-  imports: [CommonModule, RouterModule], // Importante: permite *ngIf, *ngFor y [routerLink]
+  imports: [CommonModule, RouterModule],
   templateUrl: './lista-estudiantes.component.html',
 })
 export class ListaEstudiantesComponent implements OnInit {
 
   estudiantes: Estudiante[] = [];
   errorMensaje: string = '';
+  isDeletingId?: number;
 
   constructor(
     private estudianteService: EstudianteService,
-    public auth: AuthService, // Public para poder usarlo en el template
+    public auth: AuthService,
     private router: Router
   ) {}
 
@@ -25,26 +28,48 @@ export class ListaEstudiantesComponent implements OnInit {
     this.cargarEstudiantes();
   }
 
-  cargarEstudiantes() {
+  cargarEstudiantes(): void {
+    this.errorMensaje = '';
     this.estudianteService.listar().subscribe({
-      next: (data) => this.estudiantes = data,
-      error: () => this.errorMensaje = 'No se puede obtener la lista. ¿Backend encendido?'
+      next: (data: Estudiante[]) => this.estudiantes = data,
+      error: (err) => {
+        console.error('Error al listar estudiantes:', err);
+        this.errorMensaje = 'No se puede obtener la lista. ¿Backend encendido?';
+      }
     });
   }
 
-  logout() {
-    this.auth.borrarToken(); // Borra token del almacenamiento
-    this.router.navigate(['/login']); // Redirige a login
+  logout(): void {
+    this.auth.borrarToken();
+    this.router.navigate(['/login']);
   }
 
-eliminarEstudiante(id?: number) {
-  if (!id) return; // no existe id
-  if (!confirm('¿Seguro que quieres eliminar este estudiante?')) return;
+  eliminarEstudiante(id?: number): void {
+    if (!id) return;
 
-  this.estudianteService.eliminar(id).subscribe({
-    next: () => this.cargarEstudiantes(),
-    error: () => this.errorMensaje = 'Error al eliminar estudiante'
-  });
-}
+    if (!confirm('¿Seguro que quieres eliminar este estudiante?')) return;
+
+    this.errorMensaje = '';
+    this.isDeletingId = id;
+
+    this.estudianteService.eliminar(id).pipe(
+      catchError(err => {
+        console.error('Error en eliminarEstudiante:', err);
+
+        const mensaje =
+          err?.error || err?.message || 'Error al eliminar estudiante';
+
+        this.errorMensaje = mensaje;
+
+        return EMPTY;
+      }),
+      finalize(() => {
+        this.isDeletingId = undefined;
+      })
+    ).subscribe(() => {
+      this.cargarEstudiantes();
+      alert('Estudiante eliminado correctamente');
+    });
+  }
 
 }
