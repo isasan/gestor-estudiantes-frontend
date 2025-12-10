@@ -9,4 +9,7 @@ import { RouterOutlet } from '@angular/router';
     <router-outlet></router-outlet>
   `,
 })
-export class AppComponent {}
+export class AppComponent {
+  title = 'gestor-estudiantes-frontend';
+}
+

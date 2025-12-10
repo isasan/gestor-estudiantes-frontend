@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EditarEstudianteComponent } from './editar-estudiante.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute } from '@angular/router';
 
 describe('EditarEstudianteComponent', () => {
   let component: EditarEstudianteComponent;
@@ -8,9 +9,14 @@ describe('EditarEstudianteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditarEstudianteComponent]
-    })
-    .compileComponents();
+      imports: [EditarEstudianteComponent, HttpClientTestingModule],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { paramMap: { get: () => '1' } } }
+        }
+      ]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EditarEstudianteComponent);
     component = fixture.componentInstance;

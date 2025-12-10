@@ -11,7 +11,7 @@ import { EstudianteService, Estudiante } from '../../services/estudiante.service
 })
 export class FormularioEstudianteComponent {
 
-  estudiante: Estudiante = { nombre: '', email: '', edad: 0 };
+  estudiante: Estudiante = { nombre: '', email: '', edad: 0 , telefono: ''};
 
   constructor(private estudianteService: EstudianteService) {}
 
@@ -19,7 +19,7 @@ export class FormularioEstudianteComponent {
     this.estudianteService.crear(this.estudiante).subscribe({
       next: () => {
         alert("Estudiante creado!");
-        this.estudiante = { nombre: '', email: '', edad: 0 };
+        this.estudiante = { nombre: '', email: '', edad: 0 , telefono: ''};
       },
       error: () => {
         alert("No se pudo crear el estudiante. Revisa si el backend está activo.");

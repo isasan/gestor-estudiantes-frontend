@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CrearEstudianteComponent } from './crear-estudiante.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('CrearEstudianteComponent', () => {
   let component: CrearEstudianteComponent;
@@ -8,9 +8,8 @@ describe('CrearEstudianteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CrearEstudianteComponent]
-    })
-    .compileComponents();
+      imports: [CrearEstudianteComponent, HttpClientTestingModule]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CrearEstudianteComponent);
     component = fixture.componentInstance;
@@ -21,3 +20,4 @@ describe('CrearEstudianteComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
