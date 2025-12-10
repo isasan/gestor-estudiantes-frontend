@@ -1,41 +1,51 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { Estudiante, EstudianteService } from '../../services/estudiante.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common'; // NECESARIO PARA *ngIf
+import { EstudianteService, Estudiante } from '../../services/estudiante.service';
+import { AuthService } from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-detalle-estudiante',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <h2>Detalle del Estudiante</h2>
-
-    <div *ngIf="estudiante">
-      <p><b>Nombre:</b> {{ estudiante.nombre }}</p>
-      <p><b>Edad:</b> {{ estudiante.edad }}</p>
-      <p><b>Email:</b> {{ estudiante.email }}</p>
-      <p><b>Teléfono:</b> {{ estudiante.telefono }}</p>
-    </div>
-
-    <p *ngIf="errorMensaje">{{ errorMensaje }}</p>
-  `
+  imports: [CommonModule], // IMPORTAMOS DIRECTIVAS COMO *ngIf
+  templateUrl: './detalle-estudiante.component.html',
+  styleUrls: ['./detalle-estudiante.component.css']
 })
 export class DetalleEstudianteComponent implements OnInit {
 
-  estudiante?: Estudiante;
-  errorMensaje = '';
+  estudiante: Estudiante | null = null;
+  mensajeError: string = '';
 
   constructor(
     private route: ActivatedRoute,
-    private estudianteService: EstudianteService
+    private router: Router,
+    private estudianteService: EstudianteService,
+    public auth: AuthService
   ) {}
 
   ngOnInit(): void {
+
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
+    if (isNaN(id)) {
+      this.mensajeError = 'ID inválido';
+      return;
+    }
+
     this.estudianteService.obtener(id).subscribe({
-      next: (e) => this.estudiante = e,
-      error: () => this.errorMensaje = 'No se pudo cargar el estudiante.'
+      next: (data) => this.estudiante = data,
+      error: () => this.mensajeError = 'No se pudo cargar el estudiante'
     });
+  }
+
+  volver() {
+    this.router.navigate(['/']);
+  }
+
+  editar() {
+    if (this.estudiante) {
+      this.router.navigate(['/editar', this.estudiante.id]);
+    }
   }
 }

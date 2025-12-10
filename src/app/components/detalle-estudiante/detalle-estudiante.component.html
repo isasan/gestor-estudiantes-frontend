@@ -1,1 +1,23 @@
-<p>detalle-estudiante works!</p>
+<h2>Detalle del Estudiante</h2>
+
+<!-- Error -->
+<p *ngIf="mensajeError" style="color: red;">
+  {{ mensajeError }}
+</p>
+
+<!-- Datos del estudiante -->
+<div *ngIf="estudiante">
+
+  <p><strong>ID:</strong> {{ estudiante.id }}</p>
+  <p><strong>Nombre:</strong> {{ estudiante.nombre }}</p>
+  <p><strong>Email:</strong> {{ estudiante.email }}</p>
+  <p><strong>Teléfono:</strong> {{ estudiante.telefono }}</p>
+
+  <br>
+
+  <button (click)="volver()">Volver</button>
+
+  <button *ngIf="auth.tieneRol('ADMIN')" (click)="editar()">
+    Editar
+  </button>
+</div>
